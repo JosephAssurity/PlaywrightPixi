@@ -1,0 +1,28 @@
+[
+  {
+    "name": "Home",
+    "screen": "Home",
+    "path": "stage.children[1].children[1].children[0].children[0].children[48].children[0].children[0].children[0].children[9]",
+    "text": "",
+    "bounds": {
+      "x": 464.6548767089844,
+      "y": 404.2484130859375,
+      "width": 62.209320068359375,
+      "height": 67.71456909179688,
+      "centerX": 495.75953674316406,
+      "centerY": 438.10569763183594
+    },
+    "meta": {
+      "constructorName": "vf",
+      "interactive": false,
+      "buttonMode": false,
+      "eventMode": "auto",
+      "cursor": null,
+      "name": "btn_highlight",
+      "visible": true,
+      "renderable": true,
+      "alpha": 1,
+      "worldAlpha": 1
+    }
+  }
+]

@@ -1,0 +1,132 @@
+[
+  {
+    "name": "Try",
+    "screen": "Home",
+    "path": "stage.children[1].children[1].children[0].children[0].children[46].children[0].children[0].children[0].children[9]",
+    "text": "",
+    "bounds": {
+      "x": 287.0770568847656,
+      "y": 405.07421875,
+      "width": 132.12594604492188,
+      "height": 69.36611938476562,
+      "centerX": 353.14002990722656,
+      "centerY": 439.7572784423828
+    },
+    "meta": {
+      "constructorName": "vf",
+      "interactive": false,
+      "buttonMode": false,
+      "eventMode": "auto",
+      "cursor": null,
+      "name": "btn_highlight",
+      "visible": true,
+      "renderable": true,
+      "alpha": 1,
+      "worldAlpha": 1
+    }
+  },
+  {
+    "name": "Skip How to play",
+    "screen": "How to play",
+    "path": "stage.children[1].children[4].children[1]",
+    "text": "",
+    "bounds": {
+      "x": 621.073486328125,
+      "y": 95.26011657714844,
+      "width": 349.57122802734375,
+      "height": 76.16192626953125,
+      "centerX": 795.8591003417969,
+      "centerY": 133.34107971191406
+    },
+    "meta": {
+      "constructorName": "kw",
+      "interactive": true,
+      "buttonMode": false,
+      "eventMode": "static",
+      "cursor": null,
+      "name": "menu_open_btn_spine",
+      "visible": true,
+      "renderable": true,
+      "alpha": 1,
+      "worldAlpha": 1
+    }
+  },
+  {
+    "name": "Auto Reveal",
+    "screen": "Draw",
+    "path": "stage.children[1].children[2].children[0].children[0].children[58].children[0].children[0].children[0].children[9]",
+    "text": "",
+    "bounds": {
+      "x": 645.16552734375,
+      "y": 250.96282958984375,
+      "width": 129.83203125,
+      "height": 56.42877197265625,
+      "centerX": 710.08154296875,
+      "centerY": 279.1772155761719
+    },
+    "meta": {
+      "constructorName": "vf",
+      "interactive": false,
+      "buttonMode": false,
+      "eventMode": "auto",
+      "cursor": null,
+      "name": "btn_highlight",
+      "visible": true,
+      "renderable": true,
+      "alpha": 1,
+      "worldAlpha": 1
+    }
+  },
+  {
+    "name": "Try Again",
+    "screen": "Result",
+    "path": "stage.children[1].children[2].children[0].children[0].children[135].children[1].children[1].children[0].children[26].children[0].children[0].children[0].children[7]",
+    "text": "",
+    "bounds": {
+      "x": 251.9340362548828,
+      "y": 418.5944519042969,
+      "width": 146.8065948486328,
+      "height": 77.07345581054688,
+      "centerX": 325.3373336791992,
+      "centerY": 457.1311798095703
+    },
+    "meta": {
+      "constructorName": "vf",
+      "interactive": false,
+      "buttonMode": false,
+      "eventMode": "auto",
+      "cursor": null,
+      "name": "btn_highlight",
+      "visible": true,
+      "renderable": true,
+      "alpha": 1,
+      "worldAlpha": 1
+    }
+  },
+  {
+    "name": "Home",
+    "screen": "Result",
+    "path": "stage.children[1].children[2].children[0].children[0].children[135].children[1].children[1].children[0].children[28].children[0].children[0].children[0].children[3]",
+    "text": "",
+    "bounds": {
+      "x": 440.7136535644531,
+      "y": 417.6769104003906,
+      "width": 69.12142944335938,
+      "height": 75.23837280273438,
+      "centerX": 475.2743682861328,
+      "centerY": 455.2960968017578
+    },
+    "meta": {
+      "constructorName": "vf",
+      "interactive": false,
+      "buttonMode": false,
+      "eventMode": "auto",
+      "cursor": null,
+      "name": "btn_main",
+      "visible": true,
+      "renderable": true,
+      "alpha": 1,
+      "worldAlpha": 1
+    }
+  }
+]
