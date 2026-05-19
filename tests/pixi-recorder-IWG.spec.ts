@@ -1,3 +1,4 @@
+//This code works for IWG game 
 import { test, expect, Page, Frame } from "@playwright/test";
 import fs from "fs";
 import path from "path";
@@ -9,7 +10,7 @@ test("record Pixi object paths for object model", async ({ page }) => {
   await page.goto(GAME_URL, { waitUntil: "domcontentloaded" });
 
   // Change this launch step per game
-  await page.getByRole("button", { name: "TRY" }).nth(1).click();
+  await page.getByRole("button", { name: "TRY" }).nth(27).click();
 
   const gameFrame = await getGameFrame(page);
 
@@ -20,12 +21,11 @@ test("record Pixi object paths for object model", async ({ page }) => {
   console.log("");
   console.log("🎮 Pixi recorder is active.");
   console.log("Hover over Pixi buttons/objects in the game.");
-  console.log("Then in the browser console, run:");
+  console.log("Then in the browser console, run: for example:");
   console.log('__pixiRecord("tryButton", "home")');
-  console.log('__pixiRecord("autoPickButton", "game")');
-  console.log('__pixiRecord("drawButton", "game")');
+  console.log("until you've reached the end");
   console.log("");
-  console.log("When finished, return to this terminal and press Enter.");
+  console.log("to finish run __pixiExport() and exit");
   console.log("");
 
   console.log("Recorder ready. Use browser console to record paths, then click Resume in Playwright Inspector.");

@@ -1,0 +1,21 @@
+# PlaywrightPixi
+
+pixi recorder to create iwg test specs
+
+## Setup
+
+- Install dependencies: `npm install`
+- install playwright `npx playwright install`
+
+## Steps
+1. run `npx playwright test pixi-recorder-IWG.spec.ts --headed`
+2. Go into dev tools
+3. Go into console
+4. Hover over button
+5. record with __PixiRecorder("sampleButtonName, sampleScreenName")
+6. Export with __PixiExport() to get all the recorded buttons, and manually save into a json file.
+
+## Notes
+
+Use this repository to develop Playwright scripts and Pixi.js content in the same project.
+
