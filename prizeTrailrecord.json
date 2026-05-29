@@ -1,0 +1,93 @@
+[
+  {
+    "name": "tryButton",
+    "screen": "homeScreen",
+    "path": "stage.children[1].children[1].children[0].children[0].children[46].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 288.3778381347656,
+      "y": 714.3306274414062,
+      "width": 129.53524780273438,
+      "height": 68.0059814453125,
+      "type": 1
+    }
+  },
+  {
+    "name": "closeButton",
+    "screen": "HowToPlayScreen",
+    "path": "stage.children[1].children[3].children[1].children[0].children[15].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 1459.6915283203125,
+      "y": 112.27960968017578,
+      "width": 73.6962890625,
+      "height": 56.37181854248047,
+      "type": 1
+    }
+  },
+  {
+    "name": "nextButton",
+    "screen": "HowToPlayScreen",
+    "path": "stage.children[1].children[3].children[1].children[0].children[13].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 1510.4921875,
+      "y": 269.8028564453125,
+      "width": 73.6962890625,
+      "height": 61.76910400390625,
+      "type": 1
+    }
+  },
+  {
+    "name": "previousButton",
+    "screen": "HowToPlayScreen",
+    "path": "stage.children[1].children[3].children[1].children[0].children[11].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 910.7919921875,
+      "y": 269.8028564453125,
+      "width": 73.6962890625,
+      "height": 61.76910400390625,
+      "type": 1
+    }
+  },
+  {
+    "name": "autoRevealButton",
+    "screen": "playScreen",
+    "path": "stage.children[1].children[2].children[0].children[0].children[58].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 637.4226684570312,
+      "y": 245.611083984375,
+      "width": 145.3177490234375,
+      "height": 75.18814086914062,
+      "type": 1
+    }
+  },
+  {
+    "name": "tryAgainButton",
+    "screen": "resultScreen",
+    "path": "stage.children[1].children[2].children[0].children[0].children[135].children[1].children[0].children[0].children[26].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 252.86669921875,
+      "y": 419.043212890625,
+      "width": 144.9334716796875,
+      "height": 76.090087890625,
+      "type": 1
+    }
+  },
+  {
+    "name": "homeButton",
+    "screen": "resultScreen",
+    "path": "stage.children[1].children[2].children[0].children[0].children[135].children[1].children[0].children[0].children[28].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 438.1203918457031,
+      "y": 418.3845520019531,
+      "width": 73.6962890625,
+      "height": 73.76312255859375,
+      "type": 1
+    }
+  }
+]

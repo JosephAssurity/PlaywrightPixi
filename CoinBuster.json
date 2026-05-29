@@ -1,0 +1,236 @@
+[
+  {
+    "name": "tryButton",
+    "screen": "HomeScreen",
+    "path": "stage.children[0].children[0].children[14].children[3].children[3]",
+    "text": "",
+    "bounds": {
+      "x": 495.4511450381679,
+      "y": 488.8545801526718,
+      "width": 177.24160305343509,
+      "height": 61.89389312977096,
+      "centerX": 584.0719465648855,
+      "centerY": 519.8015267175573
+    },
+    "meta": {
+      "constructorName": "t",
+      "interactive": true,
+      "buttonMode": true,
+      "eventMode": "static",
+      "cursor": "pointer",
+      "name": "clickLayer",
+      "visible": true,
+      "renderable": true,
+      "alpha": 0.001,
+      "worldAlpha": 0.001
+    }
+  },
+  {
+    "name": "increasePrice",
+    "screen": "ticketCostScreen",
+    "path": "stage.children[0].children[0].children[15].children[4].children[3]",
+    "text": "",
+    "bounds": {
+      "x": 565.2938931297709,
+      "y": 225.51526717557255,
+      "width": 56.267175572519136,
+      "height": 55.32938931297713,
+      "centerX": 593.4274809160305,
+      "centerY": 253.1799618320611
+    },
+    "meta": {
+      "constructorName": "t",
+      "interactive": true,
+      "buttonMode": true,
+      "eventMode": "static",
+      "cursor": "pointer",
+      "name": "clickLayer",
+      "visible": true,
+      "renderable": true,
+      "alpha": 0.001,
+      "worldAlpha": 0.001
+    }
+  },
+  {
+    "name": "decreasePrice",
+    "screen": "ticketCostScreen",
+    "path": "stage.children[0].children[0].children[15].children[5].children[3]",
+    "text": "",
+    "bounds": {
+      "x": 358.98091603053433,
+      "y": 225.51526717557255,
+      "width": 56.26717557251908,
+      "height": 55.32938931297713,
+      "centerX": 387.1145038167939,
+      "centerY": 253.1799618320611
+    },
+    "meta": {
+      "constructorName": "t",
+      "interactive": true,
+      "buttonMode": true,
+      "eventMode": "static",
+      "cursor": "pointer",
+      "name": "clickLayer",
+      "visible": true,
+      "renderable": true,
+      "alpha": 0.001,
+      "worldAlpha": 0.001
+    }
+  },
+  {
+    "name": "Try",
+    "screen": "ticketCostScreen",
+    "path": "stage.children[0].children[0].children[15].children[3].children[3]",
+    "text": "",
+    "bounds": {
+      "x": 401.67251908396946,
+      "y": 305.58435114503817,
+      "width": 177.24160305343509,
+      "height": 71.27175572519087,
+      "centerX": 490.29332061068703,
+      "centerY": 341.22022900763363
+    },
+    "meta": {
+      "constructorName": "t",
+      "interactive": true,
+      "buttonMode": true,
+      "eventMode": "static",
+      "cursor": "pointer",
+      "name": "clickLayer",
+      "visible": true,
+      "renderable": true,
+      "alpha": 0.001,
+      "worldAlpha": 0.001
+    }
+  },
+  {
+    "name": "go",
+    "screen": "gamePlayScreen",
+    "path": "stage.children[0].children[0].children[7].children[4]",
+    "text": "",
+    "bounds": {
+      "x": 772.0743732170745,
+      "y": 293.8495060856779,
+      "width": 141.47175572519086,
+      "height": 141.47175572519086,
+      "centerX": 842.8102510796699,
+      "centerY": 364.5853839482733
+    },
+    "meta": {
+      "constructorName": "t",
+      "interactive": true,
+      "buttonMode": true,
+      "eventMode": "static",
+      "cursor": "pointer",
+      "name": "clickLayer",
+      "visible": true,
+      "renderable": true,
+      "alpha": 0.001,
+      "worldAlpha": 0.001
+    }
+  },
+  {
+    "name": "go",
+    "screen": "bonusScreen",
+    "path": "stage.children[0].children[0].children[16].children[8].children[3]",
+    "text": "",
+    "bounds": {
+      "x": 769.8415487895936,
+      "y": 293.8495060856779,
+      "width": 141.47175572519086,
+      "height": 141.47175572519086,
+      "centerX": 840.577426652189,
+      "centerY": 364.5853839482733
+    },
+    "meta": {
+      "constructorName": "t",
+      "interactive": true,
+      "buttonMode": true,
+      "eventMode": "static",
+      "cursor": "pointer",
+      "name": "clickLayer",
+      "visible": true,
+      "renderable": true,
+      "alpha": 0.001,
+      "worldAlpha": 0.001
+    }
+  },
+  {
+    "name": "safe",
+    "screen": "bonusScreen",
+    "path": "stage.children[0].children[0].children[11].children[2].children[1]",
+    "text": "",
+    "bounds": {
+      "x": 341.60834651689686,
+      "y": 78.37213740458014,
+      "width": 397.5104525726359,
+      "height": 439.27911785949493,
+      "centerX": 540.3635728032148,
+      "centerY": 298.0116963343276
+    },
+    "meta": {
+      "constructorName": "t",
+      "interactive": true,
+      "buttonMode": true,
+      "eventMode": "static",
+      "cursor": "pointer",
+      "name": "clickLayer",
+      "visible": true,
+      "renderable": true,
+      "alpha": 0.001,
+      "worldAlpha": 0.001
+    }
+  },
+  {
+    "name": "tryAgain",
+    "screen": "resultScreen",
+    "path": "stage.children[0].children[0].children[22].children[6].children[3]",
+    "text": "",
+    "bounds": {
+      "x": 28.522900763358763,
+      "y": 233.19618320610687,
+      "width": 180.35683969465651,
+      "height": 53.16980152671755,
+      "centerX": 118.70132061068702,
+      "centerY": 259.7810839694656
+    },
+    "meta": {
+      "constructorName": "t",
+      "interactive": true,
+      "buttonMode": true,
+      "eventMode": "static",
+      "cursor": "pointer",
+      "name": "clickLayer",
+      "visible": true,
+      "renderable": true,
+      "alpha": 0.001,
+      "worldAlpha": 0.001
+    }
+  },
+  {
+    "name": "changeCost",
+    "screen": "resultScreen",
+    "path": "stage.children[0].children[0].children[22].children[5].children[1]",
+    "text": "",
+    "bounds": {
+      "x": 28.74618320610685,
+      "y": 291.4282442748092,
+      "width": 180.35683969465651,
+      "height": 53.16980152671755,
+      "centerX": 118.9246030534351,
+      "centerY": 318.013145038168
+    },
+    "meta": {
+      "constructorName": "t",
+      "interactive": true,
+      "buttonMode": true,
+      "eventMode": "static",
+      "cursor": "pointer",
+      "name": "clickLayer",
+      "visible": true,
+      "renderable": true,
+      "alpha": 0.001,
+      "worldAlpha": 0.001
+    }
+  }
+]

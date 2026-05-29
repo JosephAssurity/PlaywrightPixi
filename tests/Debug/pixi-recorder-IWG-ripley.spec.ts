@@ -1,16 +1,17 @@
+/// <reference types="node" />
 //This code works for IWG game 
 import { test, expect, Page, Frame } from "@playwright/test";
 import fs from "fs";
 import path from "path";
-import readline from "readline";
+import { clickGameButton } from '../helpers/lobbyHelpers';
 
-const GAME_URL = "https://mylotto.co.nz/instant-kiwi";
+const GAME_URL = "https://ripley.cat.mylotto.co.nz/instant-kiwi/online-games";
 
 test("record Pixi object paths for object model", async ({ page }) => {
   await page.goto(GAME_URL, { waitUntil: "domcontentloaded" });
 
   // Change this launch step per game
-  await page.getByRole("button", { name: "TRY" }).nth(27).click();
+  await clickGameButton(page, 'Coin Buster', 'TRY');
 
   const gameFrame = await getGameFrame(page);
 
@@ -69,7 +70,7 @@ async function getGameFrame(page: Page): Promise<Frame> {
 
 
 async function injectPixiRecorder(gameFrame: Frame) {
-  await gameFrame.evaluate(() => {
+  await gameFrame.evaluate(async () => {
     if ((window as any).__pixiRecorderInstalled) {
       console.log("Pixi recorder already installed.");
       return;
@@ -93,14 +94,24 @@ async function injectPixiRecorder(gameFrame: Frame) {
 
     document.body.appendChild(highlight);
 
+    
     function getApp() {
-      return (
-        (window as any).pixi_app ||
-        (window as any).__PIXI_APP__ ||
-        (window as any).app ||
-        null
-      );
+    const w = window as any;
+
+      if (w.pixi_app) return w.pixi_app;
+      if (w.__PIXI_APP__) return w.__PIXI_APP__;
+      if (w.app) return w.app;
+
+
+      if (w.__PIXI_STAGE__) {
+        console.log("✅ Using direct __PIXI_STAGE__");
+        return {
+          stage: w.__PIXI_STAGE__,
+          renderer: w.__PIXI_RENDERER__ || null
+        };
+
     }
+  }
 
     function getStageFromObject(obj: any) {
       let current = obj;
@@ -491,9 +502,12 @@ async function injectPixiRecorder(gameFrame: Frame) {
     function initOldMode() {
       const PIXI = (window as any).PIXI;
 
+      
       const InteractionManager =
-        PIXI?.interaction?.InteractionManager ||
-        PIXI?.InteractionManager;
+        PIXI?.InteractionManager ||
+        PIXI?.EventSystem ||
+        PIXI?.interaction?.InteractionManager;
+
 
       if (!InteractionManager) return false;
 
@@ -540,8 +554,28 @@ async function injectPixiRecorder(gameFrame: Frame) {
       console.log("🟡 Pixi recorder OLD MODE active.");
       return true;
     }
+    
+    console.log("Pixi globals:", {
+      hasPIXI: !!(window as any).PIXI,
+      hasStage: !!(window as any).__PIXI_STAGE__,
+      hasRenderer: !!(window as any).__PIXI_RENDERER__
+    });
 
-    const app = getApp();
+    
+      let app = getApp();
+
+      if (!app) {
+        console.log("⏳ Waiting for Pixi app/stage...");
+      }
+
+      let attempts = 0;
+
+      while (!app && attempts < 10) {
+        await new Promise(r => setTimeout(r, 300));
+        app = getApp();
+        attempts++;
+      }
+
 
     if (initNewMode(app)) {
       console.log("✅ Pixi recorder installed.");
