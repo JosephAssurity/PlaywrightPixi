@@ -1,21 +1,248 @@
-# PlaywrightPixi
+# Playwright + Pixi (Instant Kiwi)
 
-pixi recorder to create iwg test specs
+This repo contains Playwright E2E tests for **Instant Kiwi** games (e.g. **Coin Buster**) that render UI using **PixiJS** inside an iframe canvas.
 
-## Setup
+The key idea: **assert stable game states** (screens / ready-to-click Pixi objects) rather than transient visuals (e.g. a spinner that may flash for only a few frames).
 
-- Install dependencies: `npm install`
-- install playwright `npx playwright install`
+---
 
-## Steps
-1. run `npx playwright test pixi-recorder-IWG.spec.ts --headed`
-2. Go into dev tools
-3. Go into console
-4. Hover over button
-5. record with __PixiRecorder("sampleButtonName, sampleScreenName")
-6. Export with __PixiExport() to get all the recorded buttons, and manually save into a json file.
+## TL;DR
 
-## Notes
+- The game runs in an **iframe**. Always get a `Frame` and operate inside it.
+- Pixi UI lives on a **canvas**, so use **Pixi helpers** (`getPixiObjectState`, `waitPixiObjectOnScreen`, etc.).
+- For “ready” checks, prefer **state assertions** like `expectGamePlayScreenVisible()` with a **10–15s timeout**.
+- When a screen check fails, **take screenshots** (full page + canvas) and dump key Pixi states.
 
-Use this repository to develop Playwright scripts and Pixi.js content in the same project.
+---
+
+
+## Dependencies
+
+### Runtime
+
+- **Node.js (LTS recommended)** – required to run Playwright and the TypeScript test suite.
+- **Package manager** – `npm` (or `pnpm`/`yarn`) to install repo dependencies.
+
+### Test framework
+
+- **Playwright Test** (`@playwright/test`) – the test runner used by the specs.
+- **Playwright browsers** – install the bundled browser binaries once per machine/CI agent.
+
+### Language / build tooling
+
+- **TypeScript** – specs and helpers are written in TypeScript.
+
+> Tip: The authoritative list of dependencies lives in **`package.json`**.
+
+### Install (typical)
+
+```bash
+npm install
+npx playwright install
+```
+
+
+### Verify
+
+```bash
+node -v
+npx playwright --version
+```
+
+
+## Project Structure (typical)
+
+- `tests/Game/CoinBuster/*.spec.ts` – Specs (TRY/PLAY flows)
+- `tests/Game/CoinBuster/CoinBusterDriver.ts` – Driver / test DSL
+- `tests/Game/CoinBuster/CoinbusterPOM.ts` – Pixi Object Model (paths)
+- `tests/helpers/pixiHelpers.ts` – Pixi utilities
+- `tests/helpers/frameHelpers.ts` – iframe/wallet helpers
+- `tests/helpers/lobbyHelpers.ts` – lobby navigation/login
+
+---
+
+## Getting the Game Frame
+
+The game is embedded in an iframe (e.g. `title="Instant Kiwi Game"`). Your tests should:
+
+1. Launch the game from the lobby.
+2. Wait for the iframe.
+3. Wait for the **canvas** to become visible.
+
+### Timeout override for debugging
+
+`waitForGameReady` can accept a longer timeout when debugging slow loads:
+
+```ts
+export async function waitForGameReady(page: Page, timeout = 5000): Promise<Frame> {
+  const frame = await waitForGameFrame(page);
+  await expect(frame.locator("canvas")).toBeVisible({ timeout });
+  return frame;
+}
+
+// debug usage
+const frame = await waitForGameReady(page, 15000);
+```
+
+---
+
+## Pixi Object Model (POM)
+
+Pixi elements are referenced by **stage paths** captured via the Pixi recorder.
+
+Example path:
+
+```text
+stage.children[0].children[0].children[21].children[0]
+```
+
+Use these paths in the Driver to:
+
+- assert screen presence
+- ensure an element is clickable
+- emit clicks (via helpers)
+
+---
+
+## Stable Assertions: Prefer Screen Readiness
+
+### Why we don’t assert the spinner
+The loader/spinner can be **extremely brief** (“flash loader”) and is easy to miss with Node-side polling.
+
+Instead, assert that the game reaches a stable, interactive state:
+
+- **GAMEPLAY** screen becomes clickable
+- you can press **Play**
+- **RESULT** screen appears
+
+### Example: GAMEPLAY screen
+
+```ts
+async expectGamePlayScreenVisible(timeout = 15000) {
+  const path = CoinBusterObjects.progressGo.main.path;
+
+  await this.expectScreen(
+    "GAMEPLAY",
+    async () => {
+      const s = await pixi.getPixiObjectState(this.frame, path).catch(() => null);
+      return this.isClickable(s);
+    },
+    [path],
+    timeout
+  );
+}
+```
+
+---
+
+## `expectScreen` Pattern (with screenshots on failure)
+
+When a screen predicate times out, we want:
+
+- a full-page screenshot
+- a canvas screenshot
+- key Pixi states dumped for the debug paths
+
+Example pattern:
+
+```ts
+private async expectScreen(name: string, checkFn: () => Promise<boolean>, debugPaths: string[], timeout = 10000) {
+  try {
+    await expect.poll(checkFn, { timeout, message: `Waiting for ${name} screen` }).toBe(true);
+  } catch (e) {
+    console.error(`❌ ${name} screen NOT detected`);
+
+    // screenshots
+    await this.page.screenshot({ path: `test-artifacts/${name}-${Date.now()}-full.png`, fullPage: true });
+    await this.frame.locator("canvas").screenshot({ path: `test-artifacts/${name}-${Date.now()}-canvas.png` });
+
+    // Pixi state dump
+    const states = await Promise.all(debugPaths.map(p => pixi.getPixiObjectState(this.frame, p).catch(() => null)));
+    debugPaths.forEach((path, i) => {
+      const s = states[i];
+      console.error(`STATE → ${path}:`, s ? {
+        exists: s.exists,
+        worldAlpha: s.worldAlpha,
+        interactive: s.interactive,
+        eventMode: s.eventMode,
+        cursor: s.cursor,
+      } : "null");
+    });
+
+    throw new Error(`❌ Expected ${name} screen but it did not appear`, { cause: e as any });
+  }
+}
+```
+
+> Tip: Keep the default timeout at 10s, but set **GAMEPLAY** to **15s**.
+
+---
+
+## Waiting for the Next State (GO / BONUS / RESULT)
+
+For flows that transition through multiple possible states, use a single “state machine” waiter.
+
+If it times out, capture screenshots + dump key states.
+
+---
+
+## Notes on the Loader Node (Coin Buster)
+
+During investigation we identified a loader sprite:
+
+- `name: "back"`
+- `template.image: "loaderWheelGlow.psd"`
+- It can exist in the stage while **not actually rendered**.
+
+**Important:**
+
+- `visible: true` can be misleading.
+- `worldVisible: true` is the correct indicator that it is **actually on-screen**.
+
+Because the loader can flash quickly, tests should not depend on observing it.
+
+---
+
+## Suggested Test Flow (PLAY)
+
+1. Launch from lobby (PLAY NOW)
+2. Ensure frame + canvas ready
+3. Navigate home → ticket cost
+4. Click Buy/Play
+5. **Assert gameplay is ready (15s)**
+6. Drive play and assert result
+7. Optionally assert wallet decreased
+
+---
+
+## Suggested Test Flow (TRY)
+
+Similar, but:
+
+- Skip wallet assertions
+- Prefer gameplay-ready assertion over loader assertions
+
+---
+
+## Troubleshooting
+
+### Canvas not visible
+- Increase `waitForGameReady(page, 15000)`
+- Confirm you are in the correct iframe (`Instant Kiwi Game`)
+
+### Screen check timed out
+- Inspect `test-artifacts/*-full.png` and `*-canvas.png`
+- Review dumped Pixi states (`exists`, `worldAlpha`, `interactive`, `eventMode`)
+
+### Flaky loader assertions
+- Remove loader/spinner assertions
+- Assert stable outcomes (GAMEPLAY/RESULT)
+
+---
+
+## Quick Glossary
+
+- **Frame**: Playwright handle for the iframe containing the game.
+- **Pixi POM**: Recorded stage paths to Pixi DisplayObjects.
+- **worldVisible**: Pixi computed visibility considering parent chain (use this for “actually on-screen”).
 
