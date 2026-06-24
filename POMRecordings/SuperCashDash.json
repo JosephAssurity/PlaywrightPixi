@@ -1,0 +1,353 @@
+[
+  {
+    "name": "tryButton",
+    "screen": "homeScreen",
+    "path": "stage.children[1].children[1].children[0].children[0].children[48].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 184.7588653564453,
+      "y": 268.22454833984375,
+      "width": 100.68666076660156,
+      "height": 39.19586181640625,
+      "type": 1
+    }
+  },
+  {
+    "name": "homeButton",
+    "screen": "homeScreen",
+    "path": "stage.children[1].children[1].children[0].children[0].children[50].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 308.0223083496094,
+      "y": 268.22454833984375,
+      "width": 44.19012451171875,
+      "height": 40.274658203125,
+      "type": 1
+    }
+  },
+  {
+    "name": "hamburgerButton",
+    "screen": "homeScreen",
+    "path": "stage.children[1].children[10].children[1].children[0].children[12].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 511.3783874511719,
+      "y": 106.58747100830078,
+      "width": 14.024200439453125,
+      "height": 12.226234436035156,
+      "type": 1
+    }
+  },
+  {
+    "name": "winUpToDisplay",
+    "screen": "homeScreenElements",
+    "path": "stage.children[1].children[1].children[0].children[0].children[61].children[0].children[0]",
+    "text": "$20,000",
+    "bounds": {
+      "x": 227.78358459472656,
+      "y": 168.1672821044922,
+      "width": 77.43284606933594,
+      "height": 27.089508056640625,
+      "type": 1
+    }
+  },
+  {
+    "name": "ticketCost",
+    "screen": "homeScreenElements",
+    "path": "stage.children[1].children[1].children[0].children[0].children[63].children[0].children[0]",
+    "text": "$1",
+    "bounds": {
+      "x": 251.05072021484375,
+      "y": 222.38087463378906,
+      "width": 30.8985595703125,
+      "height": 30.099456787109375,
+      "type": 1
+    }
+  },
+  {
+    "name": "increaseCost",
+    "screen": "homeScreen",
+    "path": "stage.children[1].children[1].children[0].children[0]",
+    "text": "$20,000 $20,000 $1 $1",
+    "bounds": {
+      "x": 184.7588653564453,
+      "y": 41.949241638183594,
+      "width": 167.4535675048828,
+      "height": 287.0425491333008,
+      "type": 1
+    }
+  },
+  {
+    "name": "decreaseCost",
+    "screen": "homeScreen",
+    "path": "stage.children[1].children[1].children[0].children[0]",
+    "text": "$40,000 $40,000 $2 $2",
+    "bounds": {
+      "x": 184.7588653564453,
+      "y": 41.949241638183594,
+      "width": 167.4535675048828,
+      "height": 287.0425491333008,
+      "type": 1
+    }
+  },
+  {
+    "name": "soundIconButton",
+    "screen": "hamburgerBar",
+    "path": "stage.children[1].children[6].children[0].children[0].children[0]",
+    "text": "$0 $0",
+    "bounds": {
+      "x": 442.27911376953125,
+      "y": 90.2967529296875,
+      "width": 240.95587158203125,
+      "height": 258.7210693359375,
+      "type": 1
+    }
+  },
+  {
+    "name": "informationButton",
+    "screen": "hamburgerBar",
+    "path": "stage.children[1].children[6].children[0].children[0].children[0]",
+    "text": "$0 $0",
+    "bounds": {
+      "x": 442.27911376953125,
+      "y": 90.2967529296875,
+      "width": 240.95587158203125,
+      "height": 258.7210693359375,
+      "type": 1
+    }
+  },
+  {
+    "name": "continueButton",
+    "screen": "howToPlayScreen",
+    "path": "stage.children[1].children[5].children[1].children[0].children[8].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 767.8126220703125,
+      "y": 276.9253234863281,
+      "width": 126.25787353515625,
+      "height": 43.550994873046875,
+      "type": 1
+    }
+  },
+  {
+    "name": "nextButton",
+    "screen": "howToPlayScreen",
+    "path": "stage.children[1].children[5].children[1].children[0].children[13].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 943.6177978515625,
+      "y": 144.25428771972656,
+      "width": 49.10015869140625,
+      "height": 37.158172607421875,
+      "type": 1
+    }
+  },
+  {
+    "name": "randomSelectButton",
+    "screen": "rankingScreen",
+    "path": "stage.children[1].children[2].children[0].children[0].children[12].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 231.84625244140625,
+      "y": 128.14187622070312,
+      "width": 79.91006469726562,
+      "height": 28.767608642578125,
+      "type": 1
+    }
+  },
+  {
+    "name": "clearSelectionButton",
+    "screen": "rankingScreen",
+    "path": "stage.children[1].children[2].children[0].children[0].children[14].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 319.747314453125,
+      "y": 128.14187622070312,
+      "width": 79.9100341796875,
+      "height": 28.767608642578125,
+      "type": 1
+    }
+  },
+  {
+    "name": "confirmSelectionButton",
+    "screen": "rankingScreen",
+    "path": "stage.children[1].children[2].children[0].children[0].children[9].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 245.86737060546875,
+      "y": 280.8667297363281,
+      "width": 138.244384765625,
+      "height": 38.756378173828125,
+      "type": 1
+    }
+  },
+  {
+    "name": "playButton",
+    "screen": "gamePlayScreen",
+    "path": "stage.children[1].children[6].children[0].children[0].children[34].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 518.7435913085938,
+      "y": 137.47088623046875,
+      "width": 100.6917724609375,
+      "height": 92.05636596679688,
+      "type": 1
+    }
+  },
+  {
+    "name": "autoPlayButton",
+    "screen": "gamePlayScreen",
+    "path": "stage.children[1].children[6].children[0].children[0].children[14].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 512.3521728515625,
+      "y": 90.2967529296875,
+      "width": 62.92437744140625,
+      "height": 48.90495300292969,
+      "type": 1
+    }
+  },
+  {
+    "name": "stopAutoPlayButton",
+    "screen": "gamePlayScreen",
+    "path": "stage.children[1].children[6].children[0].children[0].children[14].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 512.3521728515625,
+      "y": 90.2967529296875,
+      "width": 62.92437744140625,
+      "height": 48.90495300292969,
+      "type": 1
+    }
+  },
+  {
+    "name": "tryAgainButton",
+    "screen": "resultScreen",
+    "path": "stage.children[1].children[9].children[0].children[0].children[30].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 174.6503143310547,
+      "y": 275.49908447265625,
+      "width": 126.25785827636719,
+      "height": 43.550994873046875,
+      "type": 1
+    }
+  },
+  {
+    "name": "homeButton",
+    "screen": "resultScreen",
+    "path": "stage.children[1].children[9].children[0].children[0].children[32].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 313.3221435546875,
+      "y": 277.4968566894531,
+      "width": 49.10015869140625,
+      "height": 44.7496337890625,
+      "type": 1
+    }
+  },
+  {
+    "name": "prizeAmount",
+    "screen": "resultScreenElements",
+    "path": "stage.children[1].children[9].children[0].children[0].children[24].children[0].children[0]",
+    "text": "$4",
+    "bounds": {
+      "x": 237.3328399658203,
+      "y": 214.8778839111328,
+      "width": 58.33433532714844,
+      "height": 53.53971862792969,
+      "type": 1
+    }
+  },
+  {
+    "name": "soundButton",
+    "screen": "hamburgerTab",
+    "path": "stage.children[1].children[10].children[1].children[0].children[8].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 637.1629028320312,
+      "y": 174.83319091796875,
+      "width": 0.4520263671875,
+      "height": 0.4460296630859375,
+      "type": 1
+    }
+  },
+  {
+    "name": "informationButton",
+    "screen": "hamburgerTab",
+    "path": "stage.children[1].children[10].children[1].children[0].children[6].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 686.010498046875,
+      "y": 174.83433532714844,
+      "width": 0.44976806640625,
+      "height": 0.4437713623046875,
+      "type": 1
+    }
+  },
+  {
+    "name": "homeButton",
+    "screen": "hamburgerTab",
+    "path": "stage.children[1].children[10].children[1].children[0].children[10].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 734.5946044921875,
+      "y": 174.83433532714844,
+      "width": 0.44976806640625,
+      "height": 0.4437713623046875,
+      "type": 1
+    }
+  },
+  {
+    "name": "closeHamburgerTab",
+    "screen": "hamburgerTab",
+    "path": "stage.children[1].children[10].children[1].children[0].children[12].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 767.5473022460938,
+      "y": 166.0552978515625,
+      "width": 21.04949951171875,
+      "height": 18.350830078125,
+      "type": 1
+    }
+  },
+  {
+    "name": "increaseCost",
+    "screen": "homeScreen",
+    "path": "stage.children[1].children[1].children[0].children[0].children[57].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 438.1143798828125,
+      "y": 339.4749450683594,
+      "width": 73.6962890625,
+      "height": 43.7989501953125,
+      "type": 1
+    }
+  },
+  {
+    "name": "decreaseTicketCost",
+    "screen": "homeScreen",
+    "path": "stage.children[1].children[1].children[0].children[0].children[59].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 288.1893615722656,
+      "y": 339.2721862792969,
+      "width": 73.6962890625,
+      "height": 44.21588134765625,
+      "type": 1
+    }
+  },
+    {
+    "name": "Win Amount",
+    "screen": "resultScreen",
+    "path": "stage.children[1].children[9].children[0].children[0].children[24].children[0].children[0]",
+    "text": "$1",
+    "bounds": {
+      "x": 361.9190368652344,
+      "y": 328.5924987792969,
+      "width": 76.16192626953125,
+      "height": 80.35983276367188,
+      "type": 1
+    }
+  }
+]

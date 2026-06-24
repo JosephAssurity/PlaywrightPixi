@@ -1,13 +1,11 @@
 import { expect, test } from "@playwright/test";
 import * as lobby from "../../helpers/lobbyHelpers";
 import * as frameHelpers from "../../helpers/frameHelpers";
-import * as pixi from "../../helpers/pixiHelpers";
 import { CoinBusterDriver } from "./CoinBusterDriver";
-import CoinBusterObjects from "./CoinbusterPOM";
 
 const GAME_URL = "https://ripley.cat.mylotto.co.nz/instant-kiwi/online-games";
 
-test.only("Coin Buster - TRY flow", async ({ page }) => {
+test("Coin Buster - TRY flow", async ({ page }) => {
   await page.goto(GAME_URL, { waitUntil: "domcontentloaded" });
   
   test.setTimeout(180_000);
@@ -33,14 +31,14 @@ test.only("Coin Buster - TRY flow", async ({ page }) => {
   
   await game.playButtonDriven();
 
-   await game.expectResultscreenVisible();
+   await game.expectResultScreenVisible();
 });
 
-test("Coin Buster - PLAY flow", async ({ page }) => {
+test.only("Coin Buster - PLAY flow", async ({ page }) => {
   await page.goto(GAME_URL, { waitUntil: "domcontentloaded" });
     test.setTimeout(180_000);
   //Login logic may need to be updated depending on the state of the test account and game access
-  await lobby.login(page, "newbie27@luckynumbers.co.nz", "Auckland@1206");
+  await lobby.login(page, "joseph1@luckynumbers.co.nz", "Auckland@1206");
   const lobbyBalance = await lobby.getLobbyBalance(page);
   console.log("Lobby balance before game:", lobbyBalance);
   await lobby.launchGameFromLobby(page, "Coin Buster", "PLAY NOW");
@@ -67,7 +65,7 @@ test("Coin Buster - PLAY flow", async ({ page }) => {
 
   await game.playButtonDriven();
 
-  await game.expectResultscreenVisible();
+  await game.expectResultScreenVisible();
 });
 
 

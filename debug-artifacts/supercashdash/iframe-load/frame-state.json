@@ -1,0 +1,26 @@
+{
+  "found": true,
+  "href": "https://gameslnzcht1apac.lotteryplus.com/games/20259_nz_supercashdash/index.html?rcPeriod=0&rcSet=false&funReal=-1&fixedID=guest&siteID=55&brandID=540&gameID=20259&sessionID=guest&lang=en&sgch=1&lobbyURL=https%3A%2F%2Fripley.cat.mylotto.co.nz%2Finstant-kiwi%2Fonline-games&depositURL=https%3A%2F%2Fripley.cat.mylotto.co.nz%2Finstant-kiwi%2Fonline-games%2F54074751028%23top-up&interval=null&elapsed=null&endpoint=irgslnzcht1apac.lotteryplus.com%2Firgs%2Fwebsocket&channel=1&device=null&accessibilitymode=false&operator=540",
+  "title": "",
+  "readyState": "complete",
+  "bodyBg": "rgb(255, 255, 255)",
+  "htmlBg": "rgba(0, 0, 0, 0)",
+  "canvasCount": 1,
+  "canvases": [
+    {
+      "index": 0,
+      "width": 2880,
+      "height": 1750,
+      "clientWidth": 1440,
+      "clientHeight": 875,
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 875
+      },
+      "webgl": true,
+      "glVersion": "WebGL 2.0"
+    }
+  ]
+}

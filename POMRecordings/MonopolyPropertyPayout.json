@@ -1,0 +1,237 @@
+[
+  {
+    "name": "tryButton",
+    "screen": "homeScreen",
+    "path": "stage.children[1].children[1].children[0].children[0].children[13].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 283.3523254394531,
+      "y": 435.5299987792969,
+      "width": 172.71365356445312,
+      "height": 47.496246337890625,
+      "type": 1
+    }
+  },
+  {
+    "name": "reduceCostButton",
+    "screen": "homeScreen",
+    "path": "stage.children[1].children[1].children[0].children[0].children[17].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 330.4827575683594,
+      "y": 359.4460144042969,
+      "width": 40.803619384765625,
+      "height": 38.284881591796875,
+      "type": 1
+    }
+  },
+  {
+    "name": "increaseCostButton",
+    "screen": "homeScreen",
+    "path": "stage.children[1].children[1].children[0].children[0].children[19].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 435.4638671875,
+      "y": 366.3937072753906,
+      "width": 30.224884033203125,
+      "height": 27.823028564453125,
+      "type": 1
+    }
+  },
+  {
+    "name": "homeButton",
+    "screen": "homeScreen",
+    "path": "stage.children[1].children[1].children[0].children[0].children[15].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 487.2803649902344,
+      "y": 435.0682067871094,
+      "width": 41.259368896484375,
+      "height": 46.056976318359375,
+      "type": 1
+    }
+  },
+  {
+    "name": "hamburgerButton",
+    "screen": "homeScreen",
+    "path": "stage.children[1].children[7].children[1].children[0].children[12].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 771.7229614257812,
+      "y": 117.92159271240234,
+      "width": 21.61077880859375,
+      "height": 19.94841766357422,
+      "type": 1
+    }
+  },
+  {
+    "name": "soundButton",
+    "screen": "hamburgerBar",
+    "path": "stage.children[1].children[7].children[1].children[0].children[8].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 662.0653686523438,
+      "y": 127.9650650024414,
+      "width": 0.390380859375,
+      "height": 0.40720367431640625,
+      "type": 1
+    }
+  },
+  {
+    "name": "informationButton",
+    "screen": "hamburgerBar",
+    "path": "stage.children[1].children[7].children[1].children[0].children[6].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 703.5700073242188,
+      "y": 127.9650650024414,
+      "width": 0.39044189453125,
+      "height": 0.40720367431640625,
+      "type": 1
+    }
+  },
+  {
+    "name": "homeButton",
+    "screen": "hamburgerBar",
+    "path": "stage.children[1].children[7].children[1].children[0].children[10].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 746.090576171875,
+      "y": 127.9650650024414,
+      "width": 0.390380859375,
+      "height": 0.40720367431640625,
+      "type": 1
+    }
+  },
+  {
+    "name": "continueHtpButton",
+    "screen": "htpScreen",
+    "path": "stage.children[1].children[5].children[1].children[0].children[6].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 650.6446533203125,
+      "y": 74.18065643310547,
+      "width": 53.37335205078125,
+      "height": 50.37481689453125,
+      "type": 1
+    }
+  },
+  {
+    "name": "confirmSelectionButton",
+    "screen": "gameTokenSelectionScreen",
+    "path": "stage.children[1].children[4].children[0].children[0].children[8].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 274.4827575683594,
+      "y": 430.62445068359375,
+      "width": 250.19491577148438,
+      "height": 52.8935546875,
+      "type": 1
+    }
+  },
+  {
+    "name": "autoPlayButton",
+    "screen": "gameplayScreen",
+    "path": "stage.children[1].children[2].children[0].children[0].children[33].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 42.27406311035156,
+      "y": 319.0274353027344,
+      "width": 123.49026489257812,
+      "height": 37.99700927734375,
+      "type": 1
+    }
+  },
+  {
+    "name": "playButton",
+    "screen": "gameplayScreen",
+    "path": "stage.children[1].children[2].children[0].children[0].children[27].children[0]",
+    "text": "10 / 10",
+    "bounds": {
+      "x": 47.978416442871094,
+      "y": 377.2919006347656,
+      "width": 110.87737274169922,
+      "height": 109.13583374023438,
+      "type": 1
+    }
+  },
+  {
+    "name": "tryAgainButton",
+    "screen": "resultScreen",
+    "path": "stage.children[1].children[3].children[0].children[0].children[14].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 252.05564880371094,
+      "y": 407.7248229980469,
+      "width": 216.86289978027344,
+      "height": 59.637298583984375,
+      "type": 1
+    }
+  },
+  {
+    "name": "homeButton",
+    "screen": "resultScreen",
+    "path": "stage.children[1].children[3].children[0].children[0].children[16].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 486.3388366699219,
+      "y": 411.19415283203125,
+      "width": 52.605682373046875,
+      "height": 58.722625732421875,
+      "type": 1
+    }
+  } , 
+  {
+    "name": "chanceBonusButton",
+    "screen": "chanceBonusScreen",
+    "path": "stage.children[1].children[2].children[0].children[0].children[65].children[3].children[1].children[0].children[9].children[0]",
+      "bounds": {
+
+    "x": 124.92625427246094,
+    "y": 29.94017791748047,
+    "width": 581.2379302978516,
+    "height": 563.9848098754883
+
+    }
+  }
+  ,
+  {
+    "name": "ultilityBonusButton1",
+    "screen": "utilityBonusGameScreen",
+    "path": "stage.children[1].children[2].children[0].children[0].children[65].children[1].children[1].children[0].children[7].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 95.03978729248047,
+      "y": 186.19363403320312,
+      "width": 190.8847427368164,
+      "height": 234.4783935546875,
+      "type": 1
+    }
+  },
+  {
+    "name": "ultilityBonusButton2",
+    "screen": "utilityBonusGameScreen",
+    "path": "stage.children[1].children[2].children[0].children[0].children[65].children[1].children[1].children[0].children[5].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 325.5172424316406,
+      "y": 181.73448181152344,
+      "width": 148.96551513671875,
+      "height": 206.7166290283203,
+      "type": 1
+    }
+  },
+  {
+    "name": "ultilityBonusButton3",
+    "screen": "utilityBonusGameScreen",
+    "path": "stage.children[1].children[2].children[0].children[0].children[65].children[1].children[1].children[0].children[9].children[0]",
+    "text": "",
+    "bounds": {
+      "x": 495.5466613769531,
+      "y": 176.29884338378906,
+      "width": 214.35195922851562,
+      "height": 260.47486877441406,
+      "type": 1
+    }
+  }
+]

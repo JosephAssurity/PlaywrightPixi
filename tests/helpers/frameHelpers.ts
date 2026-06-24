@@ -37,10 +37,6 @@ export async function waitForGameReady(
   return frame;
 }
 
-
-
-
-
 export async function getWalletBalance(frame: Frame): Promise<number> {
   const locator = frame.locator("#statusBar-balance .statusBar-value");
 
@@ -89,6 +85,42 @@ export async function getErrorPopupMessage(frame: Frame): Promise<string> {
 
   // ✅ 3. Return the clean string
   return errorMessage;
+}
+
+export async function isDemoMode(frame: Frame): Promise<boolean> {
+  const locator = frame.locator(".blackbar-group");
+
+  // Wait until at least one matching element has some text
+  await expect
+    .poll(async () => {
+      const texts = await locator.allTextContents();
+      return texts.some(t => t.trim().length > 0);
+    }, { timeout: 10000 })
+    .toBe(true);
+
+  const texts = (await locator.allTextContents())
+    .map(t => t.trim().toUpperCase())
+    .filter(Boolean);
+
+  return texts.some(t => t.includes("DEMO"));
+}
+
+export async function clickCanvasToPrimeAudio(page: Page, frame: Frame) {
+  const canvas = frame.locator("canvas");
+  await expect(canvas).toBeVisible();
+
+  const box = await canvas.boundingBox();
+  if (!box) {
+    throw new Error("Canvas bounding box not found");
+  }
+
+  // Click roughly in the center of the canvas
+  const x = box.x + box.width / 2;
+  const y = box.y + box.height / 2;
+
+  console.log("🔊 Priming audio with real canvas click:", { x, y });
+
+  await page.mouse.click(x, y);
 }
 
 

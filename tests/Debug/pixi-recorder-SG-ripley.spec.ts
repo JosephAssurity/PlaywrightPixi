@@ -10,7 +10,7 @@ test("record Pixi object paths for object model", async ({ page }) => {
   await page.goto(GAME_URL, { waitUntil: "domcontentloaded" });
 
   // Change this launch step per game
-  await clickGameButton(page, 'Bubble Busters', 'TRY');
+  await clickGameButton(page, 'MONOPOLY Property Payout', 'TRY');
 
   const gameFrame = await getGameFrame(page);
 
@@ -75,54 +75,59 @@ async function injectVendorRecorder(frame: Frame) {
     const records: any[] = [];
     (window as any).__pixiRecorderRecords = records;
 
-    let lastHoveredPath: string | null = null;
-    let lastHoveredObject: any = null;
+    let lastPrimaryPath: string | null = null;
+    let lastPrimaryObject: any = null;
+
+    let lastSecondaryPath: string | null = null;
+    let lastSecondaryObject: any = null;
 
     // ----------------------------
-    // Highlight overlay
+    // Highlight overlays
     // ----------------------------
-    const highlight = document.createElement("div");
-    highlight.style.position = "fixed";
-    highlight.style.border = "3px solid red";
-    highlight.style.background = "rgba(255,0,0,0.1)";
-    highlight.style.pointerEvents = "none";
-    highlight.style.zIndex = "999999";
-    highlight.style.display = "none";
+    function createOverlay(border: string, fill: string) {
+      const el = document.createElement("div");
+      el.style.position = "fixed";
+      el.style.pointerEvents = "none";
+      el.style.zIndex = "999999";
+      el.style.border = `3px solid ${border}`;
+      el.style.background = fill;
+      el.style.display = "none";
+      document.body.appendChild(el);
+      return el;
+    }
 
-    document.body.appendChild(highlight);
+    // Primary = red
+    const primaryHighlight = createOverlay("red", "rgba(255, 0, 0, 0.10)");
+
+    // Secondary = cyan / blue
+    const secondaryHighlight = createOverlay("cyan", "rgba(0, 170, 255, 0.10)");
 
     // ----------------------------
     // Helpers
     // ----------------------------
-
     function getStage() {
       const w = window as any;
 
-      // ✅ BEST: direct app access
       if (w.__PIXI_APP__?.stage) {
         return w.__PIXI_APP__.stage;
-   }
+      }
 
-  // ✅ fallbacks
-     return (
-        w.__pixiStage ||
-        w.__PIXI_STAGE__ ||
-        null
-  );
-}
-
+      return w.__pixiStage || w.__PIXI_STAGE__ || null;
+    }
 
     function isUI(node: any) {
       if (!node) return false;
 
-      // 👑 Primary signal
       if (node._interactable === true) return true;
 
       return Boolean(
         node.interactive ||
-        node.buttonMode ||
-        node.eventMode === "static" ||
-        node.eventMode === "dynamic"
+          node.buttonMode ||
+          node.eventMode === "static" ||
+          node.eventMode === "dynamic" ||
+          node._internalInteractive === true ||
+          node._internalEventMode === "static" ||
+          node._internalEventMode === "dynamic"
       );
     }
 
@@ -133,10 +138,12 @@ async function injectVendorRecorder(frame: Frame) {
         if (
           current.visible === false ||
           current.renderable === false ||
-          (current.alpha ?? 1) <= 0
+          (current.alpha ?? 1) <= 0 ||
+          (current.worldAlpha ?? 1) <= 0
         ) {
           return false;
         }
+
         current = current.parent;
       }
 
@@ -145,46 +152,41 @@ async function injectVendorRecorder(frame: Frame) {
 
     function getBoundsSafe(node: any) {
       try {
-        const b = node.getBounds();
+        const b = node.getBounds?.();
         return b && b.width > 0 && b.height > 0 ? b : null;
       } catch {
         return null;
       }
     }
 
-    function getPath(obj: any) {
-      const parts: string[] = [];
-      let current = obj;
-
-      while (current) {
-        const parent = current.parent;
-
-        if (!parent) {
-          parts.unshift("stage");
-          break;
-        }
-
-        const index = parent.children?.indexOf(current);
-        parts.unshift(`children[${index}]`);
-
-        current = parent;
-      }
-
-      return parts.join(".");
-    }
-
     function collectText(node: any, texts: string[] = []) {
       if (!node) return "";
 
-      if (typeof node.text === "string") {
-        texts.push(node.text);
+      if (typeof node.text === "string" && node.text.trim().length > 0) {
+        texts.push(node.text.trim());
       }
 
       for (const child of node.children || []) {
         collectText(child, texts);
       }
 
-      return texts.join(" ");
+      return texts.join(" ").trim();
+    }
+
+    function area(bounds: any) {
+      return bounds.width * bounds.height;
+    }
+
+    function showOverlay(el: HTMLDivElement, bounds: any) {
+      el.style.left = `${bounds.x}px`;
+      el.style.top = `${bounds.y}px`;
+      el.style.width = `${bounds.width}px`;
+      el.style.height = `${bounds.height}px`;
+      el.style.display = "block";
+    }
+
+    function hideOverlay(el: HTMLDivElement) {
+      el.style.display = "none";
     }
 
     // ----------------------------
@@ -206,17 +208,28 @@ async function injectVendorRecorder(frame: Frame) {
     let lastScan = 0;
     let cachedHits: any[] = [];
 
-    function scan(node: any, results: any[] = [], path = "stage") {
+    function scan(node: any, results: any[] = [], path = "stage", depth = 0) {
       if (!node) return results;
 
       const bounds = getBoundsSafe(node);
+      const text = collectText(node);
+      const hasText = text.length > 0;
+      const ui = isUI(node);
 
-      if (bounds && isUI(node) && isVisible(node)) {
-        results.push({ node, path, bounds });
+      if (bounds && isVisible(node) && (ui || hasText)) {
+        results.push({
+          node,
+          path,
+          bounds,
+          text,
+          hasText,
+          ui,
+          depth,
+        });
       }
 
       node.children?.forEach((child: any, i: number) => {
-        scan(child, results, `${path}.children[${i}]`);
+        scan(child, results, `${path}.children[${i}]`, depth + 1);
       });
 
       return results;
@@ -237,92 +250,137 @@ async function injectVendorRecorder(frame: Frame) {
     }
 
     // ----------------------------
-    // Find top-most object
+    // Candidate picking
     // ----------------------------
-    function getTopHit(x: number, y: number) {
-      const hits = getHits();
-
-      let top = null;
-
-      for (const item of hits) {
+    function getCandidates(x: number, y: number) {
+      const hits = getHits().filter((item) => {
         const b = item.bounds;
-
-        const inside =
+        return (
           x >= b.x &&
           x <= b.x + b.width &&
           y >= b.y &&
-          y <= b.y + b.height;
+          y <= b.y + b.height
+        );
+      });
 
-        if (inside) {
-          if (
-            !top ||
-            b.width * b.height < top.bounds.width * top.bounds.height
-          ) {
-            top = item;
-          }
-        }
+      if (!hits.length) return { primary: null, secondary: null };
+
+      const textHits = hits
+        .filter((h) => h.hasText)
+        .sort((a, b) => {
+          const areaDiff = area(a.bounds) - area(b.bounds);
+          if (areaDiff !== 0) return areaDiff;
+          return b.depth - a.depth;
+        });
+
+      const uiHits = hits
+        .filter((h) => h.ui)
+        .sort((a, b) => {
+          const areaDiff = area(a.bounds) - area(b.bounds);
+          if (areaDiff !== 0) return areaDiff;
+          return b.depth - a.depth;
+        });
+
+      // ✅ Primary: prefer container with text
+      const primary = textHits[0] || uiHits[0] || null;
+
+      // ✅ Secondary: prefer a different useful candidate
+      let secondary = null;
+
+      if (primary) {
+        secondary =
+          uiHits.find((h) => h.path !== primary.path) ||
+          textHits.find((h) => h.path !== primary.path) ||
+          null;
       }
 
-      return top;
+      return { primary, secondary };
     }
 
     // ----------------------------
     // Mouse tracking
     // ----------------------------
-
     window.addEventListener("mousemove", (e) => {
       const canvas = document.querySelector("canvas") as HTMLCanvasElement;
       if (!canvas) return;
 
-      const hit = getTopHit(e.clientX, e.clientY); // ✅ NO SCALING
-      const path = hit?.path;
+      const { primary, secondary } = getCandidates(e.clientX, e.clientY);
 
-      if (path && path !== lastHoveredPath) {
-        lastHoveredPath = path;
-        lastHoveredObject = hit.node;
+      if (primary) {
+        lastPrimaryPath = primary.path;
+        lastPrimaryObject = primary.node;
 
-        (window as any).__pixiPath = path;
-        (window as any).__pixiTarget = hit.node;
+        (window as any).__pixiPath = primary.path;
+        (window as any).__pixiTarget = primary.node;
 
-        const b = hit.bounds;
+        showOverlay(primaryHighlight, primary.bounds);
+      } else {
+        lastPrimaryPath = null;
+        lastPrimaryObject = null;
+        hideOverlay(primaryHighlight);
+      }
 
-        // ✅ SIMPLE positioning (screen-space bounds)
-        highlight.style.left = b.x + "px";
-        highlight.style.top = b.y + "px";
-        highlight.style.width = b.width + "px";
-        highlight.style.height = b.height + "px";
-        highlight.style.display = "block";
+      if (secondary) {
+        lastSecondaryPath = secondary.path;
+        lastSecondaryObject = secondary.node;
 
+        (window as any).__pixiAltPath = secondary.path;
+        (window as any).__pixiAltTarget = secondary.node;
+
+        showOverlay(secondaryHighlight, secondary.bounds);
+      } else {
+        lastSecondaryPath = null;
+        lastSecondaryObject = null;
+        hideOverlay(secondaryHighlight);
+      }
+
+      if (!primary && !secondary) {
         console.clear();
-        console.log("🎯 Hovered Pixi Object");
-        console.log("Path:", path);
-        console.log("Text:", collectText(hit.node));
-        console.log('Run: __pixiRecord("name", "screen")');
-      }
-
-      if (!hit) {
-        highlight.style.display = "none";
-      }
-    });
-
-
-    // ----------------------------
-    // Recording API
-    // ----------------------------
-    (window as any).__pixiRecord = (name: string, screen = "unknown") => {
-      if (!lastHoveredObject) {
-        console.warn("No hovered object");
+        console.log("No Pixi UI/text hit under cursor");
         return;
       }
 
-      const path = lastHoveredPath!;
-      const bounds = getBoundsSafe(lastHoveredObject);
+      console.clear();
+      console.log("🎯 Hovered Pixi Candidates");
+
+      if (primary) {
+        console.log("PRIMARY (RED):", {
+          path: primary.path,
+          text: primary.text,
+          ui: primary.ui,
+          hasText: primary.hasText,
+        });
+      }
+
+      if (secondary) {
+        console.log("SECONDARY (CYAN):", {
+          path: secondary.path,
+          text: secondary.text,
+          ui: secondary.ui,
+          hasText: secondary.hasText,
+        });
+      }
+
+      console.log('Run: __pixiRecord("name", "screen")');
+      console.log('Or:  __pixiRecordAlt("name", "screen")');
+    });
+
+    // ----------------------------
+    // Recording APIs
+    // ----------------------------
+    (window as any).__pixiRecord = (name: string, screen = "unknown") => {
+      if (!lastPrimaryObject || !lastPrimaryPath) {
+        console.warn("No PRIMARY hovered object");
+        return;
+      }
+
+      const bounds = getBoundsSafe(lastPrimaryObject);
 
       const record = {
         name,
         screen,
-        path,
-        text: collectText(lastHoveredObject),
+        path: lastPrimaryPath,
+        text: collectText(lastPrimaryObject),
         bounds,
       };
 
@@ -336,7 +394,150 @@ async function injectVendorRecorder(frame: Frame) {
         records.push(record);
       }
 
-      console.log("✅ Recorded:", record);
+      console.log("✅ Recorded PRIMARY:", record);
+      console.table(records);
+
+      return record;
+    };
+    (window as any).__pixiDumpVisibleText = () => {
+      const stage = getStage();
+      if (!stage) {
+        console.warn("No Pixi stage found");
+        return [];
+      }
+
+      const results: any[] = [];
+
+      function walk(node: any, path = "stage", depth = 0) {
+        if (!node) return;
+
+        const bounds = getBoundsSafe(node);
+        const text = collectText(node).trim();
+
+        if (bounds && isVisible(node) && text.length > 0) {
+          results.push({
+            path,
+            text,
+            name: node.name ?? null,
+            depth,
+            bounds,
+          });
+        }
+
+        node.children?.forEach((child: any, i: number) => {
+          walk(child, `${path}.children[${i}]`, depth + 1);
+        });
+      }
+
+      walk(stage);
+
+      console.table(results);
+      return results;
+    };
+    
+    (window as any).__pixiFindText = (needle: string) => {
+      const stage = getStage();
+      if (!stage) {
+        console.warn("No Pixi stage found");
+        return [];
+      }
+
+      const query = String(needle).toLowerCase().trim();
+      const results: any[] = [];
+
+      function walk(node: any, path = "stage", depth = 0) {
+        if (!node) return;
+
+        const bounds = getBoundsSafe(node);
+        const text = collectText(node).trim();
+        const lower = text.toLowerCase();
+
+        if (bounds && isVisible(node) && text.length > 0 && lower.includes(query)) {
+          results.push({
+            path,
+            text,
+            name: node.name ?? null,
+            depth,
+            bounds,
+          });
+        }
+
+        node.children?.forEach((child: any, i: number) => {
+          walk(child, `${path}.children[${i}]`, depth + 1);
+        });
+      }
+
+      walk(stage);
+
+      console.table(results);
+      return results;
+    };  
+    (window as any).__pixiDumpVisibleUi = () => {
+  const stage = getStage();
+  if (!stage) {
+    console.warn("No Pixi stage found");
+    return [];
+  }
+
+  const results: any[] = [];
+
+    function walk(node: any, path = "stage", depth = 0) {
+        if (!node) return;
+
+        const bounds = getBoundsSafe(node);
+
+        if (bounds && isVisible(node) && isUI(node)) {
+          results.push({
+            path,
+            name: node.name ?? null,
+            text: collectText(node),
+            interactive: node.interactive,
+            eventMode: node.eventMode,
+            _internalInteractive: node._internalInteractive ?? null,
+            _internalEventMode: node._internalEventMode ?? null,
+            depth,
+            bounds,
+          });
+        }
+
+        node.children?.forEach((child: any, i: number) => {
+          walk(child, `${path}.children[${i}]`, depth + 1);
+        });
+      }
+
+      walk(stage);
+
+      console.table(results);
+      return results;
+    };
+    
+    (window as any).__pixiRecordAlt = (name: string, screen = "unknown") => {
+      if (!lastSecondaryObject || !lastSecondaryPath) {
+        console.warn("No SECONDARY hovered object");
+        return;
+      }
+
+      const bounds = getBoundsSafe(lastSecondaryObject);
+
+      const record = {
+        name,
+        screen,
+        path: lastSecondaryPath,
+        text: collectText(lastSecondaryObject),
+        bounds,
+      };
+
+      const existing = records.findIndex(
+        (r) => r.name === name && r.screen === screen
+      );
+
+      if (existing >= 0) {
+        records[existing] = record;
+      } else {
+        records.push(record);
+      }
+
+      console.log("✅ Recorded SECONDARY:", record);
       console.table(records);
 
       return record;
@@ -348,19 +549,38 @@ async function injectVendorRecorder(frame: Frame) {
     };
 
     (window as any).__pixiClick = () => {
-      if (!lastHoveredObject) return;
+      if (!lastPrimaryObject) return;
 
-      lastHoveredObject.emit?.("pointertap");
-      lastHoveredObject.emit?.("click");
+      lastPrimaryObject.emit?.("pointertap");
+      lastPrimaryObject.emit?.("click");
 
-      console.log("✅ Click emitted");
+      console.log("✅ Click emitted on PRIMARY");
+    };
+
+    (window as any).__pixiClickAlt = () => {
+      if (!lastSecondaryObject) return;
+
+      lastSecondaryObject.emit?.("pointertap");
+      lastSecondaryObject.emit?.("click");
+
+      console.log("✅ Click emitted on SECONDARY");
     };
 
     (window as any).__copyPath = () => {
-      navigator.clipboard.writeText(lastHoveredPath || "");
-      console.log("📋 Copied:", lastHoveredPath);
+      navigator.clipboard.writeText(lastPrimaryPath || "");
+      console.log("📋 Copied PRIMARY path:", lastPrimaryPath);
+    };
+
+    (window as any).__copyAltPath = () => {
+      navigator.clipboard.writeText(lastSecondaryPath || "");
+      console.log("📋 Copied SECONDARY path:", lastSecondaryPath);
     };
 
     console.log("✅ Vendor Pixi Recorder Ready");
+    console.log("Primary highlight = RED");
+    console.log("Secondary highlight = CYAN");
+    console.log('Use __pixiRecord("name","screen") for PRIMARY');
+    console.log('Use __pixiRecordAlt("name","screen") for SECONDARY');
   });
 }
+``

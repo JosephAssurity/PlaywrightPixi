@@ -65,14 +65,77 @@ export async function clickPixiObjectByPath(
       throw new Error(`Pixi object not found: ${path}`);
     }
 
-    const b = target.getBounds();
     const canvas = document.querySelector("canvas") as HTMLCanvasElement;
+    if (!canvas) {
+      throw new Error("Canvas not found in frame");
+    }
+
+    let localX: number | null = null;
+    let localY: number | null = null;
+    let source = "none";
+
+    const hitArea = target.hitArea;
+
+    if (
+      hitArea &&
+      typeof hitArea.x === "number" &&
+      typeof hitArea.y === "number" &&
+      typeof hitArea.width === "number" &&
+      typeof hitArea.height === "number"
+    ) {
+      localX = hitArea.x + hitArea.width / 2;
+      localY = hitArea.y + hitArea.height / 2;
+      source = "hitArea";
+    }
+
+    if (localX === null || localY === null) {
+      const b = target.getBounds?.();
+      if (!b || !b.width || !b.height) {
+        throw new Error(`Pixi object has no usable hitArea or bounds: ${path}`);
+      }
+
+      return {
+        x: b.x + b.width / 2,
+        y: b.y + b.height / 2,
+        canvasWidth: canvas.width,
+        canvasHeight: canvas.height,
+        source: "bounds",
+        debug: {
+          name: target.name,
+          interactive: target.interactive,
+          eventMode: target.eventMode,
+          cursor: target.cursor,
+          worldAlpha: target.worldAlpha,
+        },
+      };
+    }
+
+    const matrix = target.worldTransform;
+    const worldPoint = matrix?.apply
+      ? matrix.apply({ x: localX, y: localY })
+      : { x: localX, y: localY };
 
     return {
-      x: b.x + b.width / 2,
-      y: b.y + b.height / 2,
+      x: worldPoint.x,
+      y: worldPoint.y,
       canvasWidth: canvas.width,
       canvasHeight: canvas.height,
+      source,
+      debug: {
+        name: target.name,
+        interactive: target.interactive,
+        eventMode: target.eventMode,
+        cursor: target.cursor,
+        worldAlpha: target.worldAlpha,
+        hitArea: target.hitArea
+          ? {
+              x: target.hitArea.x,
+              y: target.hitArea.y,
+              width: target.hitArea.width,
+              height: target.hitArea.height,
+            }
+          : null,
+      },
     };
   }, path);
 
@@ -88,7 +151,18 @@ export async function clickPixiObjectByPath(
   const clickX = canvasBox.x + point.x * scaleX;
   const clickY = canvasBox.y + point.y * scaleY;
 
-  await page.mouse.click(clickX, clickY);
+  console.log("🎯 Clicking Pixi object", {
+    path,
+    source: point.source,
+    clickX,
+    clickY,
+    debug: point.debug,
+  });
+
+  await page.mouse.move(clickX, clickY);
+  
+  await page.mouse.down();
+  await page.mouse.up();
 }
 
 export async function injectPixiStageCapture(gameFrame: Frame) {
@@ -221,7 +295,7 @@ export async function ensurePixiHelpers(frame: Frame) {
         w.__PIXI_APP__?.stage
       );
     });
-  }, { timeout: 10000 }).toBe(true);
+  }, { timeout: 20000 }).toBe(true);
 
   // ✅ inject helper
   await frame.evaluate(() => {
@@ -366,3 +440,125 @@ export async function isActiveTile(state: any) {
   );
 }
 
+export type EmitPixiClickResult = {
+  clicked: boolean;
+  path: string;
+  name?: string | null;
+  label?: string | null;
+  type?: string | null;
+  eventMode?: string | null;
+  interactive?: boolean | null;
+  cursor?: string | null;
+};
+
+export async function emitPixiClickByPath(
+  gameFrame: Frame,
+  path: string
+): Promise<EmitPixiClickResult> {
+  return await gameFrame.evaluate((path) => {
+    const w = window as any;
+
+    // Prefer your already-injected helper if it exists
+    const getByPath =
+      w.__PIXI_TEST__?.getByPath ||
+      function (path: string) {
+        const stage =
+          w.__PIXI_APP__?.stage ||
+          w.__PIXI_STAGE__ ||
+          w.__pixiStage ||
+          w.pixi_app?.stage ||
+          w.app?.stage ||
+          null;
+
+        if (!stage) {
+          throw new Error("No PIXI stage/app found on window");
+        }
+
+        const indexes = [...path.matchAll(/children\[(\d+)\]/g)].map(match =>
+          Number(match[1])
+        );
+
+        let node = stage;
+
+        for (const index of indexes) {
+          node = node?.children?.[index];
+          if (!node) break;
+        }
+
+        return node || null;
+      };
+
+    const target = getByPath.call(w.__PIXI_TEST__ ?? w, path);
+
+    if (!target) {
+      throw new Error(`No target found at path: ${path}`);
+    }
+
+    const global =
+      target.getGlobalPosition?.() ??
+      { x: target.x ?? 0, y: target.y ?? 0 };
+
+    const eventBase = {
+      target,
+      currentTarget: target,
+      global,
+      button: 0,
+      buttons: 1,
+    };
+
+    target.emit?.("pointerdown", { ...eventBase, type: "pointerdown" });
+    target.emit?.("pointerup", { ...eventBase, type: "pointerup", buttons: 0 });
+    target.emit?.("pointertap", { ...eventBase, type: "pointertap", buttons: 0 });
+    target.emit?.("click", { ...eventBase, type: "click", buttons: 0 });
+
+    return {
+      clicked: true,
+      path,
+      name: target.name ?? null,
+      label: target.label ?? null,
+      type: target.constructor?.name ?? null,
+      eventMode: target.eventMode ?? null,
+      interactive: target.interactive ?? null,
+      cursor: target.cursor ?? null,
+    };
+  }, path);
+}
+export async function getPixiObjectTextDeep(
+  frame: Frame,
+  path: string,
+  maxDepth = 4,
+  maxNodes = 200
+): Promise<string> {
+  return await frame.evaluate(
+    ({ path, maxDepth, maxNodes }) => {
+      const w = window as any;
+      const target = w.__getPixiByPath?.(path);
+
+      if (!target) return "";
+
+      const texts: string[] = [];
+      let visited = 0;
+
+      function walk(node: any, depth: number) {
+        if (!node) return;
+        if (depth > maxDepth) return;
+        if (visited >= maxNodes) return;
+
+        visited++;
+
+        if (typeof node.text === "string" && node.text.trim().length > 0) {
+          texts.push(node.text.trim());
+        }
+
+        for (const child of node.children || []) {
+          walk(child, depth + 1);
+          if (visited >= maxNodes) break;
+        }
+      }
+
+      walk(target, 0);
+      return texts.join(" ").trim();
+    },
+    { path, maxDepth, maxNodes }
+  );
+}

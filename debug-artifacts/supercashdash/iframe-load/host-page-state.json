@@ -1,0 +1,12 @@
+{
+  "title": "Iframe Harness Debug",
+  "href": "about:blank",
+  "readyState": "complete",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15",
+  "visibilityState": "visible",
+  "bodyTextLength": 0,
+  "bodyBg": "rgb(17, 17, 17)",
+  "htmlBg": "rgb(17, 17, 17)",
+  "canvasCount": 0,
+  "canvases": []
+}
